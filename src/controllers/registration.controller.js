@@ -10,14 +10,14 @@ export const signUp = asyncHandler(async (req, res, next) => {
   if (user) {
     next(Error("E-mail already Exist", { cause: 409 }));
   } else {
-    const hash = bcrypt.hashSync(password, parseInt(process.env.SALTROUND));
+    const hash = bcrypt.hashSync(password, parseInt(process.env.SALT_ROUND));
     const newUser = new userModel({
       email,
       password: hash,
       userName,
       age, 
     });
-    const token = jwt.sign({ id: newUser._id }, process.env.EMAILTOKEN, {
+    const token = jwt.sign({ id: newUser._id }, process.env.EMAIL_TOKEN, {
       expiresIn: "1h",
     });
     const link = `${req.protocol}://${req.headers.host}${process.env.BASE_URL}/auth/confirmemail/${token}`;
@@ -105,7 +105,7 @@ export const signUp = asyncHandler(async (req, res, next) => {
 
 export const confirmEmail = asyncHandler(async (req, res, next) => {
   const { token } = req.params;
-  const decoded = jwt.verify(token, process.env.EMAILTOKEN);
+  const decoded = jwt.verify(token, process.env.EMAIL_TOKEN);
 
   if (!decoded?.id) {
     next(Error("In-Valid PayLoad", { cause: 400 }));
@@ -147,7 +147,7 @@ export const signIn = asyncHandler(async (req, res, next) => {
           {
             id: user._id,
           },
-          process.env.SIGNINTOKEN,
+          process.env.SIGNIN_TOKEN,
           {
             expiresIn: 60 * 60 * 24,
           }

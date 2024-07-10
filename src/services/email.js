@@ -5,13 +5,13 @@ export async function sendEmail(dest, subject, message, attachments = []) {
     service: "Gmail",
     secure: true,
     auth: {
-      user: process.env.NODEMAILEREMAIL,
-      pass: process.env.NODEMAILERPASSWORD,
+      user: process.env.NODEMAILER_EMAIL,
+      pass: process.env.NODEMAILER_PASSWORD,
     },
   });
 
   let info = await transporter.sendMail({
-    from: `"RAGAB" <${process.env.NODEMAILEREMAIL}>`,
+    from: `"RAGAB" <${process.env.NODEMAILER_EMAIL}>`,
     to: dest,
     subject,
     html: message,
@@ -19,3 +19,4 @@ export async function sendEmail(dest, subject, message, attachments = []) {
   });
   return info;
 }
+ 
