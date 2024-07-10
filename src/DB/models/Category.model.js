@@ -4,11 +4,16 @@ const CategorySchema = new Schema(
   {
     name: {
       type: String,
-      required: true,
-      min: [2, "minimum length 2 char"],
-      max: [20, "max length 2 char"],
+      required: [true, "Name field is required"],
+      minlength: [2, "minimum length 2 char"],
+      maxlength: [20, "max length 2 char"],
     },
-    description: { type: String, required: true },
+    description: {
+      type: String,
+      required: [true, "Discription field is required"],
+      minlength: [10, "Minimum length is 10 characters"],
+      maxlength: [200, "Maximum length is 200 characters"],
+    },
     shared: { type: Boolean, default: false },
     priority: { type: Number, default: 0 },
     user: { type: Types.ObjectId, ref: "User", required: true },

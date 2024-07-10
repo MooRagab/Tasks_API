@@ -10,7 +10,7 @@ export const auth = () => {
     } else {
       const token = authorization.split(process.env.BEARERKEY)[1];
       const decoded = jwt.verify(token, process.env.SIGNINTOKEN);
-      if (!decoded?.id || !decoded?.isLoggedIn) {
+      if (!decoded?.id) {
         next(new Error("In-Valid Token Payload", { cause: 401 }));
       } else {
         const user = await userModel
