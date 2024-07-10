@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createCategory } from "../controllers/category.controller.js";
+import { createCategory, getAllCategories } from "../controllers/category.controller.js";
 import { auth } from "../middlewares/auth.js";
 
 const router = Router();
@@ -7,5 +7,6 @@ const router = Router();
 router.use(auth());
 
 router.post("/create", createCategory);
+router.get("/", getAllCategories)
 
 export default router;
