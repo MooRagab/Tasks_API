@@ -125,3 +125,38 @@ export const confirmEmail = asyncHandler(async (req, res, next) => {
     }
   }
 });
+
+export const signIn = asyncHandler(async (req, res, next) => {
+  const { email, password } = req.body;
+  const user = await userModel.findOne({ email });
+  if (!user) {
+    next(
+      Error("Not Registred E-mail Please SignUp First", {
+        cause: 404,
+      })
+    );
+  } else {
+    const match = bcrypt.compareSync(password, user.password);
+    if (!match) {
+      next(Error("In-Valid Password", { cause: 400 }));
+    } else {
+      if (!user.confirmEmail) {
+        next(Error("Please Confirm Your E-mail First", { cause: 422 }));
+      } else {
+        const token = jwt.sign(
+          {
+            id: user._id,
+          },
+          process.env.SIGNINTOKEN,
+          {
+            expiresIn: 60 * 60 * 24,
+          }
+        );
+        res.status(200).json({
+          message: "Done!",
+          token,
+        });
+      }
+    }
+  }
+});
