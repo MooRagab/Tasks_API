@@ -25,8 +25,6 @@ export const signUp = asyncHandler(async (req, res, next) => {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Email Confirmation</title>
     <style>
         body {
@@ -101,6 +99,29 @@ export const signUp = asyncHandler(async (req, res, next) => {
       res.status(201).json({ message: "Done successfully" });
     } else {
       next(Error("E-mail Is Rejected", { cause: 400 }));
+    }
+  }
+});
+
+export const confirmEmail = asyncHandler(async (req, res, next) => {
+  const { token } = req.params;
+  const decoded = jwt.verify(token, process.env.EMAILTOKEN);
+
+  if (!decoded?.id) {
+    next(Error("In-Valid PayLoad", { cause: 400 }));
+  } else {
+    const user = await userModel.findOneAndUpdate(
+      { _id: decoded.id, confirmEmail: false },
+      { confirmEmail: true }
+    );
+    if (!user) {
+      next(
+        Error("E-mail Is Already Confirmed", {
+          cause: 409,
+        })
+      );
+    } else {
+      res.status(200).json({ message: "Confirmed" });
     }
   }
 });

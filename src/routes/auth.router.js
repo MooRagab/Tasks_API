@@ -1,9 +1,9 @@
-import { Router } from 'express'
-import { signUp } from '../controllers/auth.controller.js'
-const router = Router()
+import { Router } from "express";
+import { confirmEmail, signUp } from "../controllers/auth.controller.js";
+const router = Router();
 
 //SignUp & Confirm E-mail
-router.post('/signup', signUp  )
+router.post("/signup", signUp);
+router.get("/confirmemail/:token", confirmEmail);
 
-
-export default router
+export default router;
