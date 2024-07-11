@@ -14,6 +14,6 @@ router.use(auth());
 router.post("/create", createCategory);
 router.get("/", getAllCategories);
 router.put("/update/:categoryId", updateCategory);
-router.delete("/delete/categoryId", deleteCategory);
+router.delete("/delete/:categoryId", deleteCategory);
 
 export default router;

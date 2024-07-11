@@ -30,14 +30,13 @@ export const updateCategory = asyncHandler(async (req, res, next) => {
   const { categoryId } = req.params;
   const { name, description, priority } = req.body;
 
-  const category = await categoryModel.findOne({
-    _id: categoryId,
-    user: req.user._id,
-  });
+  const category = await categoryModel.findOneAndUpdate(
+    { _id: categoryId, user: req.user._id },
+    { name: name, description: description, priority: priority }
+  );
   if (!category) {
     next(new Error("Category Not Found"), { cause: 404 });
   } else {
-    await categoryModel.updateOne({ name, description, priority });
     res.status(200).json({ message: "Updated Successfully" });
   }
 });
