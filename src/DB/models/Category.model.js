@@ -14,8 +14,6 @@ const CategorySchema = new Schema(
       minlength: [10, "Minimum length is 10 characters"],
       maxlength: [200, "Maximum length is 200 characters"],
     },
-    shared: { type: Boolean, default: false },
-    priority: { type: Number, default: 0 },
     user: { type: Types.ObjectId, ref: "User", required: true },
   },
   {

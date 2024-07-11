@@ -25,3 +25,20 @@ export const getAllCategories = asyncHandler(async (req, res, next) => {
   // .limit(limit).skip(skip);
   res.status(200).json({ message: "This Is All Categories", category });
 });
+
+export const updateCategory = asyncHandler(async (req, res, next) => {
+  const { categoryId } = req.params;
+  const { name, description, priority } = req.body;
+
+  const category = await categoryModel.findOne({
+    _id: categoryId,
+    user: req.user._id,
+  });
+  if (!category) {
+    next(new Error("Category Not Found"), { cause: 404 });
+  } else {
+    await categoryModel.updateOne({ name, description, priority });
+    res.status(200).json({ message: "Updated Successfully" });
+  }
+});
+  

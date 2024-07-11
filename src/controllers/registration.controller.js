@@ -15,7 +15,7 @@ export const signUp = asyncHandler(async (req, res, next) => {
       email,
       password: hash,
       userName,
-      age, 
+      age,
     });
     const token = jwt.sign({ id: newUser._id }, process.env.EMAIL_TOKEN, {
       expiresIn: "1h",
@@ -160,4 +160,3 @@ export const signIn = asyncHandler(async (req, res, next) => {
     }
   }
 });
-
