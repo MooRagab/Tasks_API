@@ -41,4 +41,16 @@ export const updateCategory = asyncHandler(async (req, res, next) => {
     res.status(200).json({ message: "Updated Successfully" });
   }
 });
-  
+
+export const deleteCategory = asyncHandler(async (req, res, next) => {
+  const { categoryId } = req.params;
+  const category = await categoryModel.findOneAndDelete({
+    _id: categoryId,
+    user: req.user._id,
+  });
+  if (!category) {
+    next(new Error("Category Not Found"), { cause: 404 });
+  } else {
+    res.status(200).json({ message: "Deleted Successfully" });
+  }
+});
