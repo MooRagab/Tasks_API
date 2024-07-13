@@ -17,12 +17,14 @@ export const createCategory = asyncHandler(async (req, res, next) => {
 });
 
 export const getAllCategories = asyncHandler(async (req, res, next) => {
-  // const { page, size } = req.query;
-  // const { skip, limit } = paginate(page, size);
-  const category = await categoryModel.find({
-    user: req.user._id,
-  });
-  // .limit(limit).skip(skip);
+  const { page, size } = req.query;
+  const { skip, limit } = paginate(page, size);
+  const category = await categoryModel
+    .find({
+      user: req.user._id,
+    })
+    .limit(limit)
+    .skip(skip);
   res.status(200).json({ message: "This Is All Categories", category });
 });
 
