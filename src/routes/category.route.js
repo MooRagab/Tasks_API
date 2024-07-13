@@ -9,12 +9,14 @@ import { auth } from "../middlewares/auth.js";
 
 const router = Router();
 
-router.get("/", getAllCategories);
-
 router.use(auth());
 
+router.get("/", getAllCategories);
+
 router.post("/create", createCategory);
+
 router.put("/update/:categoryId", updateCategory);
+
 router.delete("/delete/:categoryId", deleteCategory);
 
 export default router;

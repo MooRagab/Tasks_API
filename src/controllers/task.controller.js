@@ -40,3 +40,16 @@ export const addListTask = asyncHandler(async (req, res, next) => {
     ? res.status(201).json({ message: "Done", task })
     : next(new Error("Fail To Create New Task"), { cause: 400 });
 });
+
+export const deleteTask = asyncHandler(async (req, res, next) => {
+  const { taskId } = req.params;
+  const task = await taskModel.findOneAndDelete({
+    _id: taskId,
+    user: req.user._id,
+  });
+  if (!task) {
+    next(new Error("Task Not Found"), { cause: 404 });
+  } else {
+    res.status(200).json({ message: "Deleted Successfully" });
+  }
+});
