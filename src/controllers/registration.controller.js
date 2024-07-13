@@ -20,7 +20,7 @@ export const signUp = asyncHandler(async (req, res, next) => {
     const token = jwt.sign({ id: newUser._id }, process.env.EMAIL_TOKEN, {
       expiresIn: "1h",
     });
-    const link = `${req.protocol}://${req.headers.host}${process.env.BASE_URL}/auth/confirmemail/${token}`;
+    const link = `${req.protocol}://${req.headers.host}/auth/confirmemail/${token}`;
     const message = `
 <!DOCTYPE html>
 <html lang="en">

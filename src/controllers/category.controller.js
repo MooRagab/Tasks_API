@@ -3,13 +3,11 @@ import { asyncHandler } from "../services/errorHandling.js";
 import { paginate } from "../services/pagination.js";
 
 export const createCategory = asyncHandler(async (req, res, next) => {
-  const { name, description, shared, priority } = req.body;
+  const { name, description } = req.body;
 
   const category = new categoryModel({
     name,
     description,
-    shared,
-    priority,
     user: req.user._id,
   });
   await category.save();
@@ -21,18 +19,20 @@ export const createCategory = asyncHandler(async (req, res, next) => {
 export const getAllCategories = asyncHandler(async (req, res, next) => {
   // const { page, size } = req.query;
   // const { skip, limit } = paginate(page, size);
-  const category = await categoryModel.find({});
+  const category = await categoryModel.find({
+    user: req.user._id,
+  });
   // .limit(limit).skip(skip);
   res.status(200).json({ message: "This Is All Categories", category });
 });
 
 export const updateCategory = asyncHandler(async (req, res, next) => {
   const { categoryId } = req.params;
-  const { name, description, priority } = req.body;
+  const { name, description } = req.body;
 
   const category = await categoryModel.findOneAndUpdate(
     { _id: categoryId, user: req.user._id },
-    { name: name, description: description, priority: priority }
+    { name, description }
   );
   if (!category) {
     next(new Error("Category Not Found"), { cause: 404 });
