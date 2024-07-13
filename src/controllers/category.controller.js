@@ -23,6 +23,7 @@ export const getAllCategories = asyncHandler(async (req, res, next) => {
     .find({
       user: req.user._id,
     })
+    .populate([{ path: "user", select: "userName" }])
     .limit(limit)
     .skip(skip);
   res.status(200).json({ message: "This Is All Categories", category });

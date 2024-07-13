@@ -5,6 +5,7 @@ import {
   toggleTaskSharing,
   deleteTask,
   updateTask,
+  getSharedTasks,
 } from "../controllers/task.controller.js";
 import { auth } from "../middlewares/auth.js";
 
@@ -15,5 +16,6 @@ router.post("/addlist", auth(), addListTask);
 router.delete("/delete/:taskId", auth(), deleteTask);
 router.put("/update/:taskId", auth(), updateTask);
 router.patch("/toggleTaskSharing/:taskId", auth(), toggleTaskSharing);
+router.get("/sharedtasks", getSharedTasks);
 
 export default router;

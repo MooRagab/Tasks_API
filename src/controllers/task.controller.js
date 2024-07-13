@@ -1,5 +1,6 @@
 import { taskModel } from "../DB/models/Task.model.js";
 import { asyncHandler } from "../services/errorHandling.js";
+import { paginate } from "../services/pagination.js";
 
 export const addTextTask = asyncHandler(async (req, res, next) => {
   const { title, description, shared, deadline, status, categoryId } = req.body;
@@ -87,4 +88,20 @@ export const toggleTaskSharing = asyncHandler(async (req, res, next) => {
       .status(200)
       .json({ message: "Updated Successfully", task: updatedTask });
   }
+});
+
+export const getSharedTasks = asyncHandler(async (req, res, next) => {
+  const { page, size } = req.query;
+  const { skip, limit } = paginate(page, size);
+  const task = await taskModel
+    .find({
+      shared: true,
+    })
+    .populate([
+      { path: "category", select: "name" },
+      { path: "user", select: "userName" },
+    ])
+    .limit(limit)
+    .skip(skip);
+  res.status(200).json({ message: "This Is All Tasks", task });
 });
