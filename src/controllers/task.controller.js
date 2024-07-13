@@ -19,3 +19,24 @@ export const addTextTask = asyncHandler(async (req, res, next) => {
     ? res.status(201).json({ message: "Done", task })
     : next(new Error("Fail To Create New Task"), { cause: 400 });
 });
+
+export const addListTask = asyncHandler(async (req, res, next) => {
+  const { title, description, shared, deadline, status, categoryId, items } =
+    req.body;
+
+  const task = new taskModel({
+    type: "list",
+    title,
+    description,
+    shared,
+    user: req.user._id,
+    deadline,
+    status,
+    category: categoryId,
+    items,
+  });
+  await task.save();
+  task
+    ? res.status(201).json({ message: "Done", task })
+    : next(new Error("Fail To Create New Task"), { cause: 400 });
+});
