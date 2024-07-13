@@ -53,3 +53,38 @@ export const deleteTask = asyncHandler(async (req, res, next) => {
     res.status(200).json({ message: "Deleted Successfully" });
   }
 });
+
+export const updateTask = asyncHandler(async (req, res, next) => {
+  const { taskId } = req.params;
+  const { title, description, deadline, status, priority } = req.body;
+
+  const task = await taskModel.findOneAndUpdate(
+    { _id: taskId, user: req.user._id },
+    { title, description, deadline, status, priority }
+  );
+  if (!task) {
+    next(new Error("Task Not Found"), { cause: 404 });
+  } else {
+    res.status(200).json({ message: "Updated Successfully" });
+  }
+});
+
+export const toggleTaskSharing = asyncHandler(async (req, res, next) => {
+  const { taskId } = req.params;
+
+  const task = await taskModel.findOne({ _id: taskId, user: req.user._id });
+
+  if (!task) {
+    next(new Error("Task Not Found"), { cause: 404 });
+  } else {
+    const updatedTask = await taskModel.findOneAndUpdate(
+      { _id: taskId, user: req.user._id },
+      { shared: !task.shared },
+      { new: true }
+    );
+
+    res
+      .status(200)
+      .json({ message: "Updated Successfully", task: updatedTask });
+  }
+});
