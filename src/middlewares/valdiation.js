@@ -73,7 +73,7 @@ export const createTextTaskSchema = joi.object({
   description: joi.string().allow(null, ""),
   type: joi.string().valid("text").required(),
   shared: joi.boolean().default(false),
-  priority: joi.string().valid("low", "medium", "high").default("medium"),
+  priority: joi.string().valid("low", "medium", "high").required(),
   deadline: joi.date().iso(),
   status: joi
     .string()
@@ -86,7 +86,7 @@ export const createListTaskSchema = joi.object({
   items: joi.array().items(joi.string()).required(),
   type: joi.string().valid("list").required(),
   shared: joi.boolean().default(false),
-  priority: joi.string().valid("low", "medium", "high").default("medium"),
+  priority: joi.string().valid("low", "medium", "high").required(),
   deadline: joi.date().iso(),
   status: joi
     .string()
