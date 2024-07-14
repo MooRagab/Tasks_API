@@ -3,6 +3,8 @@ import { taskModel } from "../DB/models/Task.model.js";
 import { asyncHandler } from "../services/errorHandling.js";
 import { paginate } from "../services/pagination.js";
 
+//Create a new text task
+
 export const addTextTask = asyncHandler(async (req, res, next) => {
   const { title, description, shared, deadline, status, categoryId, priority } =
     req.body;
@@ -23,6 +25,8 @@ export const addTextTask = asyncHandler(async (req, res, next) => {
     ? res.status(201).json({ message: "Done", task })
     : next(new Error("Fail To Create New Task"), { cause: 400 });
 });
+
+//Create a new list task
 
 export const addListTask = asyncHandler(async (req, res, next) => {
   const {
@@ -54,6 +58,8 @@ export const addListTask = asyncHandler(async (req, res, next) => {
     : next(new Error("Fail To Create New Task"), { cause: 400 });
 });
 
+//Delete Task With ID
+
 export const deleteTask = asyncHandler(async (req, res, next) => {
   const { taskId } = req.params;
   const task = await taskModel.findOneAndDelete({
@@ -66,6 +72,8 @@ export const deleteTask = asyncHandler(async (req, res, next) => {
     res.status(200).json({ message: "Deleted Successfully" });
   }
 });
+
+//Update Task
 
 export const updateTask = asyncHandler(async (req, res, next) => {
   const { taskId } = req.params;
@@ -81,6 +89,8 @@ export const updateTask = asyncHandler(async (req, res, next) => {
     res.status(200).json({ message: "Updated Successfully" });
   }
 });
+
+//(Shared Or Not Shared)
 
 export const toggleTaskSharing = asyncHandler(async (req, res, next) => {
   const { taskId } = req.params;
@@ -102,6 +112,8 @@ export const toggleTaskSharing = asyncHandler(async (req, res, next) => {
   }
 });
 
+//Get Shared Tasks viewr or user
+
 export const getSharedTasks = asyncHandler(async (req, res, next) => {
   const { page, size } = req.query;
   const { skip, limit } = paginate(page, size);
@@ -118,25 +130,35 @@ export const getSharedTasks = asyncHandler(async (req, res, next) => {
   res.status(200).json({ message: "This Is All Tasks", task });
 });
 
-export const getTasksByCategory = asyncHandler(async (req, res, next) => {
+//Filter Tasks By Category
+
+export const filterTasksByCategory = asyncHandler(async (req, res, next) => {
   const { page, size, categoryName } = req.query;
   const { skip, limit } = paginate(page, size);
-
-  if (!categoryName) {
-    return res.status(400).json({ message: "Category name is required" });
-  }
-
   const category = await categoryModel.findOne({ name: categoryName });
   if (!category) {
-    return res.status(404).json({ message: "Category not found" });
+    return next(new Error("Category Not Found"), { cause: 404 });
   }
-
-  const query = {
-    $or: [{ user: req.user._id }, { shared: true }],
-    category: category._id,
-  };
-
-  const tasks = await taskModel.find(query).limit(limit).skip(skip);
-
+  const tasks = await taskModel
+    .find({ category: category._id })
+    .limit(limit)
+    .skip(skip);
+  if (!tasks.length) {
+    return next(new Error("No Tasks Found in this Category"), { cause: 404 });
+  }
   res.status(200).json({ message: "Tasks filtered by category", tasks });
+});
+
+//filtering by privacy
+export const filterTasksByPrivacy = asyncHandler(async (req, res, next) => {
+  const { page, size, taskPrivacy } = req.query;
+  const { skip, limit } = paginate(page, size);
+  const tasks = await taskModel
+    .find({ shared: taskPrivacy })
+    .limit(limit)
+    .skip(skip);
+  if (!tasks.length) {
+    return next(new Error("No Tasks Found "), { cause: 404 });
+  }
+  res.status(200).json({ message: "Tasks filtered by Privacy", tasks });
 });
