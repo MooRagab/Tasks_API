@@ -62,19 +62,34 @@ export const signUp = {
       cPassword: joi.string().valid(joi.ref("password")).required(),
     }),
 };
-export const signIn = {
-  body: joi
-    .object()
-    .required()
-    .keys({
-      email: joi.string().required().email().messages({
-        "any.required": "Please Enter Your Email",
-        "string.empty": "Email Is Required",
-        "string.email": "Please Enter Valid Email",
-      }),
-      password: joi.string().required().messages({
-        "any.required": "Password is required.",
-        "string.empty": "Password is required.",
-      }),
-    }),
-};
+
+export const createCategory = joi.object({
+  name: joi.string().min(3).max(30).required(),
+  description: joi.string().max(255),
+});
+
+export const createTextTaskSchema = joi.object({
+  title: joi.string().required(),
+  description: joi.string().allow(null, ""),
+  type: joi.string().valid("text").required(),
+  shared: joi.boolean().default(false),
+  priority: joi.string().valid("low", "medium", "high").default("medium"),
+  deadline: joi.date().iso(),
+  status: joi
+    .string()
+    .valid("pending", "in progress", "completed")
+    .default("pending"),
+});
+
+export const createListTaskSchema = joi.object({
+  title: joi.string().required(),
+  items: joi.array().items(joi.string()).required(),
+  type: joi.string().valid("list").required(),
+  shared: joi.boolean().default(false),
+  priority: joi.string().valid("low", "medium", "high").default("medium"),
+  deadline: joi.date().iso(),
+  status: joi
+    .string()
+    .valid("pending", "in progress", "completed")
+    .default("pending"),
+});

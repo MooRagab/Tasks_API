@@ -8,11 +8,23 @@ import {
   getSharedTasks,
 } from "../controllers/task.controller.js";
 import { auth } from "../middlewares/auth.js";
+import { validation } from "../middlewares/valdiation.js";
+import * as validator from "../middlewares/valdiation.js";
 
 const router = Router();
 
-router.post("/addtext", auth(), addTextTask); // Add text task
-router.post("/addlist", auth(), addListTask); // Add a list of tasks
+router.post(
+  "/addtext",
+  auth(),
+  validation(validator.createTextTaskSchema),
+  addTextTask
+); // Add text task
+router.post(
+  "/addlist",
+  auth(),
+  validation(validator.createListTaskSchema),
+  addListTask
+); // Add a list of tasks
 router.delete("/delete/:taskId", auth(), deleteTask); // Delete tasks
 router.put("/update/:taskId", auth(), updateTask); // Update task
 router.patch("/toggleTaskSharing/:taskId", auth(), toggleTaskSharing); // Toggle task sharing

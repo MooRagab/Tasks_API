@@ -11,6 +11,6 @@ const router = Router();
 
 router.post("/signup", validation(validator.signUp), signUp); // sign up
 router.get("/confirmemail/:token", confirmEmail); // confirm email
-router.post("/signin", validation(validator.signIn), signIn); // sign in
+router.post("/signin", signIn); // sign in
 
 export default router;
