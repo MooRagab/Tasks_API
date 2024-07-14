@@ -1,3 +1,4 @@
+import { categoryModel } from "../DB/models/Category.model.js";
 import { taskModel } from "../DB/models/Task.model.js";
 import { asyncHandler } from "../services/errorHandling.js";
 import { paginate } from "../services/pagination.js";
@@ -104,4 +105,27 @@ export const getSharedTasks = asyncHandler(async (req, res, next) => {
     .limit(limit)
     .skip(skip);
   res.status(200).json({ message: "This Is All Tasks", task });
+});
+
+export const getTasksByCategory = asyncHandler(async (req, res, next) => {
+  const { page, size, categoryName } = req.query;
+  const { skip, limit } = paginate(page, size);
+
+  if (!categoryName) {
+    return res.status(400).json({ message: "Category name is required" });
+  }
+
+  const category = await categoryModel.findOne({ name: categoryName });
+  if (!category) {
+    return res.status(404).json({ message: "Category not found" });
+  }
+
+  const query = {
+    $or: [{ user: req.user._id }, { shared: true }],
+    category: category._id,
+  };
+
+  const tasks = await taskModel.find(query).limit(limit).skip(skip);
+
+  res.status(200).json({ message: "Tasks filtered by category", tasks });
 });

@@ -4,10 +4,13 @@ import {
   signIn,
   signUp,
 } from "../controllers/registration.controller.js";
+import { validation } from "../middlewares/valdiation.js";
+import * as validator from "../middlewares/valdiation.js";
+
 const router = Router();
 
-router.post("/signup", signUp);
-router.get("/confirmemail/:token", confirmEmail);
-router.post("/signin", signIn);
+router.post("/signup", validation(validator.signUp), signUp); // sign up
+router.get("/confirmemail/:token", confirmEmail); // confirm email
+router.post("/signin", validation(validator.signIn), signIn); // sign in
 
 export default router;

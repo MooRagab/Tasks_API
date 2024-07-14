@@ -2,6 +2,8 @@ import { categoryModel } from "../DB/models/Category.model.js";
 import { asyncHandler } from "../services/errorHandling.js";
 import { paginate } from "../services/pagination.js";
 
+//Create Category
+
 export const createCategory = asyncHandler(async (req, res, next) => {
   const { name, description } = req.body;
 
@@ -16,6 +18,8 @@ export const createCategory = asyncHandler(async (req, res, next) => {
     : next(new Error("Fail To Create New Category"), { cause: 400 });
 });
 
+//Get all User Categories with Paginate
+
 export const getAllCategories = asyncHandler(async (req, res, next) => {
   const { page, size } = req.query;
   const { skip, limit } = paginate(page, size);
@@ -28,6 +32,8 @@ export const getAllCategories = asyncHandler(async (req, res, next) => {
     .skip(skip);
   res.status(200).json({ message: "This Is All Categories", category });
 });
+
+//Update User Categories
 
 export const updateCategory = asyncHandler(async (req, res, next) => {
   const { categoryId } = req.params;
@@ -44,6 +50,8 @@ export const updateCategory = asyncHandler(async (req, res, next) => {
   }
 });
 
+//Delete User Categories
+
 export const deleteCategory = asyncHandler(async (req, res, next) => {
   const { categoryId } = req.params;
   const category = await categoryModel.findOneAndDelete({
@@ -56,3 +64,7 @@ export const deleteCategory = asyncHandler(async (req, res, next) => {
     res.status(200).json({ message: "Deleted Successfully" });
   }
 });
+
+
+
+//Support CRUD actions for all categories

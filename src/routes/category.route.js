@@ -11,12 +11,12 @@ const router = Router();
 
 router.use(auth());
 
-router.get("/", getAllCategories);
+router.get("/", getAllCategories); // get all categories
 
-router.post("/create", createCategory);
+router.post("/create", createCategory); // create category
 
-router.put("/update/:categoryId", updateCategory);
+router.put("/update/:categoryId", updateCategory); // update category
 
-router.delete("/delete/:categoryId", deleteCategory);
+router.delete("/delete/:categoryId", deleteCategory); // delete category
 
 export default router;
