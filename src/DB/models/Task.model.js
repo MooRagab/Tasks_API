@@ -10,7 +10,7 @@ const taskSchema = new Schema(
     priority: {
       type: String,
       enum: ["low", "medium", "high"],
-      default: "medium",
+      required: true,
     },
     deadline: { type: Date },
     status: {

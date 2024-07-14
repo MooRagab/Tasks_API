@@ -4,7 +4,8 @@ import { asyncHandler } from "../services/errorHandling.js";
 import { paginate } from "../services/pagination.js";
 
 export const addTextTask = asyncHandler(async (req, res, next) => {
-  const { title, description, shared, deadline, status, categoryId } = req.body;
+  const { title, description, shared, deadline, status, categoryId, priority } =
+    req.body;
 
   const task = new taskModel({
     type: "text",
@@ -15,6 +16,7 @@ export const addTextTask = asyncHandler(async (req, res, next) => {
     deadline,
     status,
     category: categoryId,
+    priority,
   });
   await task.save();
   task
@@ -23,8 +25,16 @@ export const addTextTask = asyncHandler(async (req, res, next) => {
 });
 
 export const addListTask = asyncHandler(async (req, res, next) => {
-  const { title, description, shared, deadline, status, categoryId, items } =
-    req.body;
+  const {
+    title,
+    description,
+    shared,
+    deadline,
+    status,
+    categoryId,
+    items,
+    priority,
+  } = req.body;
 
   const task = new taskModel({
     type: "list",
@@ -36,6 +46,7 @@ export const addListTask = asyncHandler(async (req, res, next) => {
     status,
     category: categoryId,
     items,
+    priority,
   });
   await task.save();
   task
